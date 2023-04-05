@@ -1,7 +1,7 @@
 ﻿using DemoEventTestClient;
 
 Console.WriteLine("----------------------------------------------------------------------------------");
-Console.WriteLine("*                          TEST EVENT IN AVRO FORMAT                             *");
+Console.WriteLine("*                          TEST EVENT IN JSON FORMAT                             *");
 Console.WriteLine("----------------------------------------------------------------------------------");
 
 DemoMessage message = new DemoMessage();

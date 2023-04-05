@@ -120,13 +120,9 @@ namespace DemoConditioningApp
                      foreach (var field in fields)
                      {
                         DataColumn column;
-                        if (field.Name.Equals("body", StringComparison.OrdinalIgnoreCase))
+                        if (field.Name.Equals("payload", StringComparison.OrdinalIgnoreCase))
                         {
-                           string originalRawJson = originalData.GetValueOrDefault(field).Data.GetValue(0) as string;
-                           DemoMessageObj? originalRecord = JsonSerializer.Deserialize<DemoMessageObj>(originalRawJson);
-                           originalRecord.payload = "This is a conditioned message.";
-
-                           column = new DataColumn(field, new string[] { JsonSerializer.Serialize(originalRecord) });
+                           column = new DataColumn(field, new string[] { "This is a conditioned value." });
                         }
                         else
                         {

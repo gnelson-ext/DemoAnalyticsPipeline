@@ -6,7 +6,7 @@ namespace DemoEventTestClient
 {
    /// <summary>
    /// This class represents a test event, which will connect to the specified Event Hub namespace and send 
-   /// one, short message with an Avro file as the event body.
+   /// one, short message with JSON as the event body.
    /// </summary>
    internal class DemoMessage
    {

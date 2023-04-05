@@ -6,3 +6,4 @@ Console.WriteLine("-------------------------------------------------------------
 
 DemoMessage message = new DemoMessage();
 await message.SendTestEvent();
+Console.WriteLine(Environment.NewLine);

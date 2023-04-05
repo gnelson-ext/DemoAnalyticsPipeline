@@ -9,6 +9,8 @@ using Parquet;
 using System.Collections.Generic;
 using Parquet.Schema;
 using Parquet.Data;
+using System.Text.Json;
+using System.Linq;
 
 namespace DemoConditioningApp
 {
@@ -120,7 +122,11 @@ namespace DemoConditioningApp
                         DataColumn column;
                         if (field.Name.Equals("body", StringComparison.OrdinalIgnoreCase))
                         {
-                           column = new DataColumn(field, new Int64[] { 1, 2, 3, 4 });
+                           string originalRawJson = originalData.GetValueOrDefault(field).Data.GetValue(0) as string;
+                           DemoMessageObj? originalRecord = JsonSerializer.Deserialize<DemoMessageObj>(originalRawJson);
+                           originalRecord.payload = "This is a conditioned message.";
+
+                           column = new DataColumn(field, new string[] { JsonSerializer.Serialize(originalRecord) });
                         }
                         else
                         {

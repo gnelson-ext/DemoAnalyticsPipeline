@@ -1,5 +1,6 @@
 ﻿using Azure.Messaging.EventHubs.Producer;
 using Azure.Messaging.EventHubs;
+using Parquet.Thrift;
 
 namespace DemoEventTestClient
 {
@@ -11,6 +12,12 @@ namespace DemoEventTestClient
    {
       public async Task<bool> SendTestEvent()
       {
+         //
+         // For simplicity, the demo will use SAS to connect. This is not best practice. Azure AD
+         // would be preferred. To run the demo, simply add your EventHub SAS connection string
+         // as an environment variable called 'DEMO_AZURE_EVENTHUB_SAS'.
+         //
+
          string? eventhubSas = string.Empty;
 
          try
@@ -22,13 +29,28 @@ namespace DemoEventTestClient
             Console.WriteLine("Environment variable 'DEMO_AZURE_EVENTHUB_SAS' was not found. Please add your EventHub's SaS connection string as an environment variable to continue.");
          }
 
-         EventHubProducerClient producerClient = new EventHubProducerClient(eventhubSas, "demo-event");
+         //
+         // Establish a connection with the event hub, then read in the test data for the
+         // message body and send it.
+         //
 
+         EventHubProducerClient producerClient = new EventHubProducerClient(eventhubSas, "demo-event");
          using EventDataBatch eventBatch = await producerClient.CreateBatchAsync();
 
-         byte[] eventBody = File.ReadAllBytes("testdata.avro");
-         if (!eventBatch.TryAdd(new EventData(eventBody)))
+         try
          {
+            string fileData = File.ReadAllText("testdata.json");
+            EventData eventData = new EventData(System.Text.Encoding.UTF8.GetBytes(fileData));
+            eventData.ContentType = "application/json";
+
+            if (!eventBatch.TryAdd(eventData))
+            {
+               return false;
+            }
+         }
+         catch (Exception)
+         {
+            Console.WriteLine("Error: Could not read data from the test input file.");
             return false;
          }
 

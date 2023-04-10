@@ -73,7 +73,7 @@ namespace DemoConditioningApp
             // This will be a writeable stream.
             //
 
-            using (var tempFileStream = File.Create("temp.parquet"))
+            using (var tempFileStream = File.Create(Path.Combine(Path.GetTempPath(), "temp.parquet")))
             {
                rawFileStream.Seek(0, SeekOrigin.Begin);
                rawFileStream.CopyTo(tempFileStream);
